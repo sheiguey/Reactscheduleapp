@@ -1,0 +1,49 @@
+
+.App {
+  text-align: center;
+}
+
+.menu-container{
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.menu-container div{
+  border: 1px solid black;
+  text-align: center;
+  width: 220px;
+  height: 10vh;
+  z-index: 9;
+}
+
+ul{
+  list-style-type: none;
+  text-align: center;
+}
+
+li{
+  width: 100%;
+  padding: 10px;
+  border: 2px solid black
+}
+
+.display-menu{
+  display: block;
+  position: fixed;
+  right: 90%;
+  left: 0;
+  top: 61%;
+  bottom: 0;
+  margin: auto;
+  height: 300px;
+  width: 220px;;
+  border-radius: 5px;
+ text-align: center;
+  
+  
+}
+
+.content{
+  position: relative;
+}
