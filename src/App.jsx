@@ -6,16 +6,18 @@ import {
     Routes,
     Route,
   } from "react-router-dom";
+import AddEntity from "./Entity/AddEntity";
 
 
 function App(){
  return(
   
-      <BrowserRouter>
+  <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
       <Route path="login" element={<Loging/>} />
+      <Route path="entities" element={<AddEntity/>} />
     </Routes>
     
   </BrowserRouter>

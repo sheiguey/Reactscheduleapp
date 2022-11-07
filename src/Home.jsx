@@ -94,7 +94,7 @@ function Home() {
         row.appendChild(container1);
         let multiSelect1 = new MultiSelect({
           dataSource:Crew,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Crews'
         });
@@ -110,7 +110,7 @@ function Home() {
         row.appendChild(container2);
         let multiSelect2 = new MultiSelect({
           dataSource:Pump,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'pumps'
         });
@@ -126,7 +126,7 @@ function Home() {
         row.appendChild(container3);
         let multiSelect3 = new MultiSelect({
           dataSource:Bulker,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'bulkers'
         });
@@ -142,7 +142,7 @@ function Home() {
         row.appendChild(container2);
         let multiSelect4 = new MultiSelect({
           dataSource:Rig,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text', id:'id', value: 'value' }, 
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Rigs'
         });
@@ -160,7 +160,7 @@ function Home() {
         row.appendChild(container5);
         let multiSelect5 = new MultiSelect({
           dataSource:Customer,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text', id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Customers'
         });
@@ -177,7 +177,7 @@ function Home() {
         row.appendChild(container6);
         let multiSelect6 = new MultiSelect({
           dataSource:Well,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Wells'
         });
@@ -194,7 +194,7 @@ function Home() {
         row.appendChild(container7);
         let multiSelect7 = new MultiSelect({
           dataSource:Site,
-          fields: { text: 'text', value: 'value' },
+          fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Sites'
         });
@@ -213,8 +213,7 @@ function Home() {
           Id: scheduleData.length + 1,
           Subject: args.data.Subject,
           Location: args.data.Location,
-          StartTime: args.data.StartTime,
-          EndTime: args.data.EndTime,
+          Description:args.data.Description,
           Crew:args.data.Crew,
           Pump:args.data.Pump,
           Bulker:args.data.Bulker,
