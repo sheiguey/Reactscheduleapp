@@ -8,7 +8,7 @@ import './App.css';
  
  
 function Home() {
-
+ 
   const [Well,setWell]=useState([]);
   const [Crew,setCrew]= useState([]);
   const [Bulker,setBulker]=useState([]);
@@ -16,11 +16,52 @@ function Home() {
   const [Rig,setRig]  = useState([]);
   const [Customer,setCustomer] = useState([]);
   const [Site, setSite] = useState([])
+  const [Appointments,setAppointment] = useState([]);
+
+
+   
+   
+  useEffect(() => {
+    Bulkers();
+    Pumps();
+    Crews();
+    Sites();
+    Wells();
+    Customers();
+    Rigs();
+    getAppointments()
+  }, []);
+
+   function CreateApoints(item){
+      datasource.createAppointments(item);
+   }
+
+   async function getAppointments(){
+    await datasource.getAppointments().then((res)=>{
+      return setAppointment(()=>res.data.elements.map(item=>{
+        return  {
+          Id: item.id,
+          Subject: item.title,
+          StartTime: new Date( ),
+          EndTime: new Date( ),
+          IsAllDay: false,
+          Description:item.description,
+          Bulker:item.bulker.name,
+          Crew:item.crew.name,
+          Customer:item.customer.id,
+          Pump:item.pump.name,
+          Rig:item.rig.name,
+          Well:item.well.name,
+          Site:item.site.name
+        }
+      }))
+    })
+   }
 
   async function Bulkers(){
    await datasource.getBulkers().then((res)=>{
       return setBulker(()=>res.data.elements.map(item=>{
-       return { text: item.name, Id: item.id ,value:item.name}
+       return { text: item.name, Id: item.id ,value:item.id}
        }));
     })
   }
@@ -28,7 +69,7 @@ function Home() {
  async function Wells(){
    await datasource.getWells().then((res) => {
       return setWell(()=>res.data.elements.map(item=>{
-      return { text: item.name, Id: item.id ,value:item.name}
+      return { text: item.name, Id: item.id ,value:item.id}
       }))
      })
   }
@@ -36,15 +77,35 @@ function Home() {
  async function Crews(){
   await  datasource.getCrews().then((res)=>{
       return setCrew(()=>res.data.elements.map(item=>{
-       return { text: item.name, Id: item.id ,value:item.name}
+       return { text: item.name, Id: item.id ,value:item.id}
        }))
     })
   }
 
+  async  function Customers(){
+    await datasource.getCustomers().then((res)=>{
+       return setCustomer(()=>res.data.elements.map(item=>{
+         return { text: item.name, Id: item.id ,value:item.id}
+       }
+       ))
+     }
+     )
+   }
+
+   async  function Rigs(){
+    await datasource.getRigs().then((res)=>{
+       return setRig(()=>res.data.elements.map(item=>{
+         return { text: item.name, Id: item.id ,value:item.id}
+       }
+       ))
+     }
+     )
+   }
+
  async function Pumps(){
   await  datasource.getPumps().then((res)=>{
       return setPump(()=>res.data.elements.map(item=>{
-        return { text: item.name, Id: item.id ,value:item.name}
+        return { text: item.name, Id: item.id ,value:item.id}
       }))
     }
    )
@@ -53,30 +114,14 @@ function Home() {
   async  function Sites(){
    await datasource.getSites().then((res)=>{
       return setSite(()=>res.data.elements.map(item=>{
-        return { text: item.name, Id: item.id ,value:item.name}
+        return { text: item.name, Id: item.id ,value:item.id}
       }
       ))
     }
     )
   }
-
- 
-  useEffect(() => {
-    Bulkers();
-    Pumps();
-    Crews();
-    Sites();
-    Wells();
-  }, []);
   
-  const save = 'e-event-create e-text-ellipsis e-control e-btn e-lib e-flat e-primary';
-  const saveEvent = 'e-control e-btn e-lib e-primary e-event-save e-flat';
-  const moreDetails = 'e-event-details e-text-ellipsis e-control e-btn e-lib e-flat';
-  const scheduleData=[];
 
-
-
-   
 
   function onPopupOpen(args) {
     if (args.type === 'Editor') {
@@ -88,18 +133,19 @@ function Home() {
 // Crew field
         let container1 = createElement('div', { className: 'custom-field-container' });
         let inputEle1 = createElement('input', {
-          className: 'e-field', attrs: { name: 'Crew' }
+          className: 'e-field', attrs: { name: 'Crew'}
         });
         container1.appendChild(inputEle1);
         row.appendChild(container1);
-        let multiSelect1 = new MultiSelect({
+        let DropDownList1 = new DropDownList({
           dataSource:Crew,
-          fields: { text: 'text',id:'id', value: 'value' },
+          fields: { text: 'text', id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Crews'
         });
-        multiSelect1.appendTo(inputEle1);
+        DropDownList1.appendTo(inputEle1);
         inputEle1.setAttribute('name', 'Crew');
+        
 
 // pump field
         let container2 = createElement('div', { className: 'custom-field-container' });
@@ -108,13 +154,13 @@ function Home() {
         });
         container2.appendChild(inputEle2);
         row.appendChild(container2);
-        let multiSelect2 = new MultiSelect({
+        let DropDownList2 = new DropDownList({
           dataSource:Pump,
           fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'pumps'
         });
-        multiSelect2.appendTo(inputEle2);
+        DropDownList2.appendTo(inputEle2);
         inputEle2.setAttribute('name', 'Pump');
 // bulker field
 
@@ -124,33 +170,31 @@ function Home() {
         });
         container3.appendChild(inputEle3);
         row.appendChild(container3);
-        let multiSelect3 = new MultiSelect({
+        let DropDownList3 = new DropDownList({
           dataSource:Bulker,
-          fields: { text: 'text',id:'id', value: 'value' },
+          fields: { text: 'text', id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'bulkers'
         });
-        multiSelect3.appendTo(inputEle3);
+        DropDownList3.appendTo(inputEle3);
         inputEle3.setAttribute('name', 'Bulker');
 
 //Rig field
         let container4 = createElement('div', { className: 'custom-field-container' });
         let inputEle4 = createElement('input', {
-          className: 'e-field', attrs: { name: 'Pump' }
+          className: 'e-field', attrs: { name: 'Rig' }
         });
         container4.appendChild(inputEle4);
-        row.appendChild(container2);
-        let multiSelect4 = new MultiSelect({
+        row.appendChild(container4);
+        let DropDownList4 = new DropDownList({
           dataSource:Rig,
           fields: { text: 'text', id:'id', value: 'value' }, 
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Rigs'
         });
-        multiSelect4.appendTo(inputEle4);
+        DropDownList4.appendTo(inputEle4);
         inputEle4.setAttribute('name', 'Rig');
 
-
-        
 //Field customer
         let container5 = createElement('div', { className: 'custom-field-container' });
         let inputEle5 = createElement('input', {
@@ -158,15 +202,14 @@ function Home() {
         });
         container5.appendChild(inputEle5);
         row.appendChild(container5);
-        let multiSelect5 = new MultiSelect({
+        let DropDownList5 = new DropDownList({
           dataSource:Customer,
           fields: { text: 'text', id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Customers'
         });
-        multiSelect5.appendTo(inputEle5);
+        DropDownList5.appendTo(inputEle5);
         inputEle5.setAttribute('name', 'Customer');
-
 
         //Field Well
         let container6 = createElement('div', { className: 'custom-field-container' });
@@ -175,57 +218,62 @@ function Home() {
         });
         container6.appendChild(inputEle6);
         row.appendChild(container6);
-        let multiSelect6 = new MultiSelect({
+        let DropDownList6 = new DropDownList({
           dataSource:Well,
           fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Wells'
         });
-        multiSelect6.appendTo(inputEle6);
+        DropDownList6.appendTo(inputEle6);
         inputEle5.setAttribute('name', 'Well');
 
 
         //Field sites
         let container7 = createElement('div', { className: 'custom-field-container' });
         let inputEle7 = createElement('input', {
-          className: 'e-field', attrs: { name: 'Customer' }
+          className: 'e-field', attrs: { name: 'Site' }
         });
         container7.appendChild(inputEle7);
         row.appendChild(container7);
-        let multiSelect7 = new MultiSelect({
+        let DropDownList7 = new DropDownList({
           dataSource:Site,
           fields: { text: 'text',id:'id', value: 'value' },
           value: args.data.EventType,
           floatLabelType: 'Always', placeholder: 'Sites'
         });
-        multiSelect7.appendTo(inputEle7);
+        DropDownList7.appendTo(inputEle7);
         inputEle7.setAttribute('name', 'Site');
       }
     }
   }
 
-  function onclosePopup(args) {
-    const classNameSave = args.event.target.className
 
-    if (args.event.target.className !== moreDetails) {
-      if (classNameSave === save || classNameSave === saveEvent) {
-        scheduleData.push({
-          Id: scheduleData.length + 1,
-          Subject: args.data.Subject,
-          Location: args.data.Location,
-          Description:args.data.Description,
-          Crew:args.data.Crew,
-          Pump:args.data.Pump,
-          Bulker:args.data.Bulker,
-          Client:args.data.Customer,
-          Site:args.data.Site,
-          Well:args.data.Well,
-        })
-        
-      }
+  const save = 'e-event-create e-text-ellipsis e-control e-btn e-lib e-flat e-primary';
+  const saveEvent = 'e-control e-btn e-lib e-primary e-event-save e-flat';
+  const moreDetails = 'e-event-details e-text-ellipsis e-control e-btn e-lib e-flat';
+  let scheduleData={};
+  
+  function closePopup(args){
+    const classNameSave = args.event.target.className
+    if(args.event.target.className !== moreDetails){
+       
+       scheduleData={
+          title:args.data.Subject,
+          description:args.data.Description,
+          customerId:14,
+          wellId:args.data.Well,
+          crewId:args.data.Crew,
+          siteId:args.data.Site,
+          rigId:args.data.Rig,
+          bulkerId:args.data.Bulker,
+          pumpId:args.data.Pump,
+        }
+       
     }
     console.log(scheduleData);
+    CreateApoints(scheduleData);
   }
+  
 
  
  
@@ -233,6 +281,11 @@ function Home() {
      console.log(Well);
      console.log(Bulker);
      console.log(Crew);
+     console.log(Pump);
+     console.log(Site);
+     console.log(Rig);
+     console.log(Customer);
+     console.log(Appointments)
   }
 
   function onDragStart(args) {
@@ -244,7 +297,7 @@ function Home() {
   return (
     <div className='content'>
       <ScheduleComponent height='90vh' currentView='Month' dragStart={(onDragStart.bind(this))}
-        eventSettings={{ dataSource: scheduleData }}  popupClose={onclosePopup.bind(this)} popupOpen={onPopupOpen.bind(this)}  
+        eventSettings={{ dataSource:Appointments}}  popupClose={closePopup} popupOpen={onPopupOpen.bind(this)}  
         showQuickInfo={true}
       >
         <Inject services={[Day, Week, WorkWeek, Month, Agenda, Resize, DragAndDrop]} />
