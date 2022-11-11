@@ -5,16 +5,20 @@
 
 .menu-container{
   display: flex;
-  justify-content: space-between;
-  position: relative;
+  width: 100%;
+  padding: 20px;
+  background-color: rgb(134, 229, 147);
+  color: black;
+  font-weight: bold;
 }
 
+
+
+
 .menu-container div{
-  border: 1px solid black;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
-  width: 220px;
-  height: 10vh;
-  z-index: 9;
 }
 
 ul{
@@ -44,6 +48,4 @@ li{
   
 }
 
-.content{
-  position: relative;
-}
+ 

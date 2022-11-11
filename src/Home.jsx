@@ -5,6 +5,8 @@ import { createElement, extend } from '@syncfusion/ej2-base';
 import { DataManager, WebApiAdaptor} from '@syncfusion/ej2-data';
 import datasource from './services/datasource';
 import './App.css';
+import { useNavigate } from 'react-router-dom';
+import AddEntity from './Entity/AddEntity';
  
  
 function Home() {
@@ -18,6 +20,7 @@ function Home() {
   const [Site, setSite] = useState([])
   const [Appointments,setAppointment] = useState([]);
 
+  const navigate = useNavigate();
 
    
    
@@ -251,23 +254,28 @@ function Home() {
   const save = 'e-event-create e-text-ellipsis e-control e-btn e-lib e-flat e-primary';
   const saveEvent = 'e-control e-btn e-lib e-primary e-event-save e-flat';
   const moreDetails = 'e-event-details e-text-ellipsis e-control e-btn e-lib e-flat';
+
   let scheduleData={};
   
   function closePopup(args){
     const classNameSave = args.event.target.className
     if(args.event.target.className !== moreDetails){
-       
-       scheduleData={
+       if( classNameSave === save || classNameSave === saveEvent){
+        scheduleData={
           title:args.data.Subject,
           description:args.data.Description,
-          customerId:14,
+          customerId:args.data.Customer,
           wellId:args.data.Well,
           crewId:args.data.Crew,
           siteId:args.data.Site,
           rigId:args.data.Rig,
           bulkerId:args.data.Bulker,
           pumpId:args.data.Pump,
-        }
+          createdAt:new Date(),
+          startdate:args.data.StartTime,
+       }
+       }
+
        
     }
     console.log(scheduleData);
@@ -295,7 +303,9 @@ function Home() {
 
 
   return (
-    <div className='content'>
+    <div className='container'>
+      <div className='row'>
+      <div className='col-lg-10'>
       <ScheduleComponent height='90vh' currentView='Month' dragStart={(onDragStart.bind(this))}
         eventSettings={{ dataSource:Appointments}}  popupClose={closePopup} popupOpen={onPopupOpen.bind(this)}  
         showQuickInfo={true}
@@ -309,12 +319,25 @@ function Home() {
           <ViewDirective option='Agenda' />
         </ViewsDirective>
       </ScheduleComponent>
-      <div className='menu-container'>
-
-        <button onClick={onPrintClick}>Print</button>
-
-
       </div>
+      <div col-lg-2>
+        <AddEntity/>
+      </div>
+      </div>
+      
+
+     
+      {/* <div className='menu-container' onClick={()=>{
+          navigate("/entities");
+         }}>
+      
+         <div className='entities' >
+          <h3>Add Entities</h3>
+         </div>
+      
+
+
+      </div> */}
 
     </div>
 
