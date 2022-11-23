@@ -136,7 +136,7 @@ function Home() {
 // Crew field
         let container1 = createElement('div', { className: 'custom-field-container' });
         let inputEle1 = createElement('input', {
-          className: 'e-field', attrs: { name: 'Crew',value:'crew'}
+          className: 'e-field', attrs: { name: 'Crew',value:'Crew'}
         });
         container1.appendChild(inputEle1);
         row.appendChild(container1);
