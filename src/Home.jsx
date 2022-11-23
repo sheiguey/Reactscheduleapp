@@ -228,7 +228,7 @@ function Home() {
           floatLabelType: 'Always', placeholder: 'Wells'
         });
         DropDownList6.appendTo(inputEle6);
-        inputEle5.setAttribute('name', 'Well');
+        inputEle6.setAttribute('name', 'Well');
 
 
         //Field sites
@@ -262,7 +262,7 @@ function Home() {
         scheduleData={
           title:args.data.Subject,
           description:args.data.Description,
-          customerId:3,
+          customerId:args.data.Customer,
           wellId:args.data.Well,
           crewId:args.data.Crew,
           siteId:args.data.Site,
