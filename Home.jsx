@@ -1,12 +1,12 @@
 import React, { useEffect,useState } from 'react';
 import { ScheduleComponent, ViewsDirective, ViewDirective, Day, Week, WorkWeek, Month, Agenda, Inject, DragAndDrop, Resize, Schedule } from '@syncfusion/ej2-react-schedule';
-import { DropDownList, MultiSelect } from '@syncfusion/ej2-dropdowns';
+import { DropDownList, MultiSelect } from '@syncfusion/ej2-dropdowns'
 import { createElement, extend } from '@syncfusion/ej2-base';
 import { DataManager, WebApiAdaptor} from '@syncfusion/ej2-data';
 import datasource from './services/datasource';
+import './App.css';
 import { useNavigate } from 'react-router-dom';
 import AddEntity from './Entity/AddEntity';
-import './App.css';
  
  
 function Home() {
@@ -17,7 +17,7 @@ function Home() {
   const [Pump,setPump]=useState([]);
   const [Rig,setRig]  = useState([]);
   const [Customer,setCustomer] = useState([]);
-  const [Site, setSite] = useState([]);
+  const [Site, setSite] = useState([])
   const [Appointments,setAppointment] = useState([]);
 
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function Home() {
     Wells();
     Customers();
     Rigs();
-    getAppointments();
+    getAppointments()
   }, []);
 
    function CreateApoints(item){
@@ -45,13 +45,13 @@ function Home() {
         return  {
           Id: item.id,
           Subject: item.title,
-          StartTime: item.startDate,
-          EndTime: item.endDate,
+          StartTime: new Date( ),
+          EndTime: new Date( ),
           IsAllDay: false,
           Description:item.description,
           Bulker:item.bulker.name,
           Crew:item.crew.name,
-          Customer:item.customer.name,
+          Customer:item.customer.id,
           Pump:item.pump.name,
           Rig:item.rig.name,
           Well:item.well.name,
@@ -88,7 +88,7 @@ function Home() {
   async  function Customers(){
     await datasource.getCustomers().then((res)=>{
        return setCustomer(()=>res.data.elements.map(item=>{
-         return { text: item.name, Id: item.id , value:item.id}
+         return { text: item.name, Id: item.id ,value:item.id}
        }
        ))
      }
@@ -136,7 +136,7 @@ function Home() {
 // Crew field
         let container1 = createElement('div', { className: 'custom-field-container' });
         let inputEle1 = createElement('input', {
-          className: 'e-field', attrs: { name: 'Crew',value:'crew'}
+          className: 'e-field', attrs: { name: 'Crew'}
         });
         container1.appendChild(inputEle1);
         row.appendChild(container1);
@@ -251,14 +251,16 @@ function Home() {
   }
 
 
-  const save = 'e-save-icon e-icons e-event-create e-text-ellipsis e-control e-btn e-lib e-flat e-primary';
-  const saveEvent = 'e-subject-container e-control e-btn e-lib e-primary e-event-save e-flat';
+  const save = 'e-event-create e-text-ellipsis e-control e-btn e-lib e-flat e-primary';
+  const saveEvent = 'e-control e-btn e-lib e-primary e-event-save e-flat e-field';
   const moreDetails = 'e-event-details e-text-ellipsis e-control e-btn e-lib e-flat';
+
   let scheduleData={};
+  
   function closePopup(args){
     const classNameSave = args.event.target.className
-    if (args.event.target.className !== moreDetails) {
-       
+    if(args.event.target.className !== moreDetails){
+       if( classNameSave !== save || classNameSave !== saveEvent){
         scheduleData={
           title:args.data.Subject,
           description:args.data.Description,
@@ -270,16 +272,19 @@ function Home() {
           bulkerId:args.data.Bulker,
           pumpId:args.data.Pump,
           createdAt:new Date(),
-          startDate:args.data.StartTime,
-          endDate:args.data.EndTime,
+          startdate:args.data.StartTime,
        }
-       
- 
-    console.log(scheduleData);
-    CreateApoints(scheduleData);
+       }
+
+       console.log(scheduleData);
+       CreateApoints(scheduleData);
+    }
+   
   }
-}
   
+
+ 
+ 
   function onPrintClick() {
      console.log(Well);
      console.log(Bulker);
@@ -292,31 +297,18 @@ function Home() {
   }
 
   function onDragStart(args) {
-    args.navigation.enable = false;
+    args.navigation.enable = true;
   }
 
-  let detail = '<div class="tooltip-wrap">' +
-  '<div class="image ${EventType}"></div>' +
-  '<div class="content-area"><div class="name"><label>Title</label>&nbsp;:&nbsp;${Subject}</></div>' +
-  '${if(Description !== null && Description !== undefined)}<div class="Description"><label>Description</label>&nbsp;:&nbsp; ${Description}</div>${/if}' +
-  '${if(Customer !== null && Customer !== undefined)}<div class="Customer"><label>Customer</label>&nbsp;:&nbsp;${Customer}</div>${/if}' +
-  '${if(Well !== null && Well !== undefined)}<div class="Well"><label>Well</label>&nbsp;:&nbsp;${Well}</div>${/if}' +
-  '${if(Site !== null && Site !== undefined)}<div class="Site"><label>Site</label>&nbsp;:&nbsp;${Site}</div>${/if}' +
-  '${if(Rig !== null && Rig !== undefined)}<div class="Rig"><label>Rig</label>&nbsp;:&nbsp;${Rig}</div>${/if}' +
-  '${if(Bulker !== null && Bulker !== undefined)}<div class="Bulker"><label>Bulker</label>&nbsp;:&nbsp;${Bulker}</div>${/if}' +
-  '${if(Pump !== null && Pump !== undefined)}<div class="Pump"><label>Pump</label>&nbsp;:&nbsp;${Pump}</div>${/if}' +
-  '<div class="time">From&nbsp;:&nbsp;${StartTime.toLocaleString()} </div>' +
-  '<div class="time">To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;${EndTime.toLocaleString()} </div></div></div>';
- 
+
 
   return (
     <div className='container'>
       <div className='row'>
       <div className='col-lg-10'>
-      <ScheduleComponent height='100vh'  currentView='Month'  dragStart={(onDragStart.bind(this))}
-        eventSettings={{ dataSource:Appointments, template:detail, enableTooltip: true,
-          tooltipTemplate:detail}}   popupClose={closePopup} popupOpen={onPopupOpen.bind(this)}  
-      showQuickInfo={true} 
+      <ScheduleComponent height='90vh' currentView='Month' dragStart={(onDragStart.bind(this))}
+        eventSettings={{ dataSource:Appointments}}  popupClose={closePopup} popupOpen={onPopupOpen.bind(this)}  
+        showQuickInfo={true}
       >
         <Inject services={[Day, Week, WorkWeek, Month, Agenda, Resize, DragAndDrop]} />
         <ViewsDirective>
@@ -332,9 +324,7 @@ function Home() {
         <AddEntity/>
       </div>
       </div>
-      <button onClick={onPrintClick}>
-        click
-      </button>
+      
 
      
       {/* <div className='menu-container' onClick={()=>{
