@@ -262,7 +262,7 @@ function Home() {
         scheduleData={
           title:args.data.Subject,
           description:args.data.Description,
-          customerId:args.data.Customer,
+          customerId:3,
           wellId:args.data.Well,
           crewId:args.data.Crew,
           siteId:args.data.Site,
